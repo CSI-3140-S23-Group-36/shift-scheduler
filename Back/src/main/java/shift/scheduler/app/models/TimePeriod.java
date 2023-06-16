@@ -22,8 +22,10 @@ public class TimePeriod {
     @ManyToOne
     private Employee employee;
 
-    @NotNull
     private Date date;
+
+    @NotNull
+    private Day day;
 
     @NotNull
     private Integer startHour;
