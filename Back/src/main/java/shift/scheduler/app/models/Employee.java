@@ -4,6 +4,9 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Where;
 
@@ -13,6 +16,10 @@ import java.util.List;
 @Table(name = "employees")
 public class Employee extends User {
 
+    @NotNull
+    @Min(value = 1)
+    private Integer maxHoursPerDay;
+    
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @Where(clause = "type == 0")
     @Size(max = 7)
