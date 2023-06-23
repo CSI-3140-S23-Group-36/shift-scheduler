@@ -10,7 +10,7 @@ import java.sql.Date;
 public class TimePeriod {
 
     public enum Type {
-        AVAILABILITIY,
+        AVAILABILITY,
         SHIFT
     }
 
@@ -35,4 +35,24 @@ public class TimePeriod {
 
     @NotNull
     private Type type;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Day getDay() {
+        return day;
+    }
+
+    public Integer getStartHour() {
+        return startHour;
+    }
+
+    public Integer getEndHour() {
+        return endHour;
+    }
+
+    public Type getType() {
+        return type;
+    }
 }
