@@ -36,12 +36,29 @@ public class TimePeriod {
     @NotNull
     private Type type;
 
+    public TimePeriod() {}
+
+    public TimePeriod(Employee employee, Date date, Day day, Integer startHour,
+                      Integer endHour, Type type) {
+
+        this.employee = employee;
+        this.date = date;
+        this.day = day;
+        this.startHour = startHour;
+        this.endHour = endHour;
+        this.type = type;
+    }
+
     public Long getId() {
         return id;
     }
 
     public Day getDay() {
         return day;
+    }
+
+    public Employee getEmployee() {
+        return employee;
     }
 
     public Integer getStartHour() {
