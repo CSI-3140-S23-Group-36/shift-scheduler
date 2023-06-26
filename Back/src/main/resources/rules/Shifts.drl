@@ -7,10 +7,13 @@ import java.util.Set;
 
 rule "Schedule for a day with 2 employees"
 when
-    $reqs : ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $numHours : numHours )
-    $shift1 : TimePeriod( $emp1 : employee, $start1 : startHour, $end1 : endHour )
-    $shift2 : TimePeriod( this != $shift1, $emp2 : employee, $start2 : startHour, $end2 : endHour )
+    Day( $day : this )
+    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $numHours : numHours )
+
+    $shift1 : TimePeriod( day == $day, $emp1 : employee, $start1 : startHour, $end1 : endHour )
+    $shift2 : TimePeriod( this != $shift1, day == $day,  $emp2 : employee, $start2 : startHour, $end2 : endHour )
     $shifts : List() from collect( TimePeriod( (this == $shift1) || (this == $shift2) ) )
+
     forall( Hour( $value : value )
             $numShifts : Number( intValue >= $numEmps ) from accumulate( TimePeriod( (startHour <= $value) && (endHour >= $value) ) from $shifts,
                                                                          init( int count = 0; ),
@@ -18,6 +21,7 @@ when
                                                                          result( new Integer(count) ) ) )
 then
     System.out.println("TODO: Save shifts");
+    System.out.println($day);
     System.out.println("Shift 1: " + $shift1.getStartHour() + "-" + $shift1.getEndHour());
     System.out.println("Shift 2: " + $shift2.getStartHour() + "-" + $shift2.getEndHour());
 end

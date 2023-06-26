@@ -11,6 +11,8 @@ import java.util.List;
 @RepositoryRestResource
 public interface TimePeriodRepository extends Repository<TimePeriod, Integer> {
 
+    List<TimePeriod> findAll();
+
     List<TimePeriod> findByEmployeeId(Integer employeeId);
 
     List<TimePeriod> findByDay(Day day);
