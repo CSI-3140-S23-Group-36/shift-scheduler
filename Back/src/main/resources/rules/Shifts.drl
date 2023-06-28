@@ -31,8 +31,7 @@ when
                                                                          action( count++; ),
                                                                          result( new Integer(count) ) ) )
 then
-    System.out.println("TODO: Save shifts");
-    System.out.println($day);
+    System.out.println("Schedule for " + $day + ":");
     System.out.println("Shift 1: " + $shift1.getStartHour() + "-" + $shift1.getEndHour());
     System.out.println("Shift 2: " + $shift2.getStartHour() + "-" + $shift2.getEndHour());
 
@@ -61,7 +60,7 @@ when
     $sat : ScheduleForDay( day == Day.SAT )
     $sun : ScheduleForDay( day == Day.SUN )
 then
-    System.out.println("TODO: Save weekly schedule");
+    System.out.println("Generated weekly schedule");
     List<ScheduleForDay> dailySchedules = new ArrayList<>();
     dailySchedules.add($mon);
     dailySchedules.add($tue);
@@ -71,4 +70,8 @@ then
     dailySchedules.add($sat);
     dailySchedules.add($sun);
     insert(new ScheduleForWeek(null, dailySchedules));
+end
+
+query "getWeeklySchedules"
+    $schedule : ScheduleForWeek()
 end

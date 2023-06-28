@@ -2,13 +2,12 @@ package shift.scheduler.app;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import shift.scheduler.app.models.Day;
-import shift.scheduler.app.models.Hour;
-import shift.scheduler.app.models.ScheduleRequirements;
-import shift.scheduler.app.models.TimePeriod;
+import shift.scheduler.app.models.*;
 import shift.scheduler.app.repositories.TimePeriodRepository;
 
 import java.util.ArrayList;
@@ -45,14 +44,21 @@ public class DroolsTester implements CommandLineRunner {
         // Add employees
         timePeriods.stream().map(TimePeriod::getEmployee).forEach(session::insert);
 
+        // Add possible shifts
         List<TimePeriod> possibleShifts = generatePossibleShifts(timePeriods);
-
         possibleShifts.forEach(session::insert);
 
+        // Add schedule requirements for each day of the week
         for (Day day : Day.values())
             session.insert(new ScheduleRequirements(2, day, 9, 10));
 
         session.fireAllRules();
+
+        /* Retrieve the generated schedules
+           Based on https://stackoverflow.com/questions/15035209/ */
+        List<ScheduleForWeek> schedules = new ArrayList<>();
+        QueryResults results = session.getQueryResults("getWeeklySchedules");
+        results.forEach(row -> schedules.add((ScheduleForWeek) row.get("$schedule")));
 
         session.dispose();
     }
