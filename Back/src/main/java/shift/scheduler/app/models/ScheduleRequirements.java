@@ -1,22 +1,39 @@
 package shift.scheduler.app.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ScheduleRequirements {
 
     private int numberOfEmployeesPerHour;
+
+    private Day day;
+
     private int startHour;
     private int endHour;
     private int numHours;
 
-    public ScheduleRequirements(int numberOfEmployeesPerHour, int startHour, int endHour) {
+    private List<Hour> hours;
+
+    public ScheduleRequirements(int numberOfEmployeesPerHour, Day day, int startHour, int endHour) {
 
         this.numberOfEmployeesPerHour = numberOfEmployeesPerHour;
+        this.day = day;
         this.startHour = startHour;
         this.endHour = endHour;
         this.numHours = endHour - startHour + 1;
+        this.hours = new ArrayList<>();
+
+        for (int i = startHour; i <= endHour; i++)
+            this.hours.add(new Hour(i));
     }
 
     public int getNumberOfEmployeesPerHour() {
         return numberOfEmployeesPerHour;
+    }
+
+    public Day getDay() {
+        return day;
     }
 
     public int getStartHour() {
@@ -29,5 +46,9 @@ public class ScheduleRequirements {
 
     public int getNumHours() {
         return numHours;
+    }
+
+    public List<Hour> getHours() {
+        return hours;
     }
 }

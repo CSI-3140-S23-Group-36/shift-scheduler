@@ -18,4 +18,14 @@ public class ScheduleForDay {
     @OneToMany
     @Column(name = "shift_id")
     private List<TimePeriod> shifts;
+
+    public ScheduleForDay(Day day, List<TimePeriod> shifts) {
+
+        this.day = day;
+        this.shifts = shifts;
+    }
+
+    public Day getDay() {
+        return day;
+    }
 }

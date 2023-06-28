@@ -19,4 +19,10 @@ public class ScheduleForWeek {
     @OneToMany
     @Column(name = "daily_schedule_id")
     private List<ScheduleForDay> dailySchedules;
+
+    public ScheduleForWeek(Date firstDayOfWeek, List<ScheduleForDay> dailySchedules) {
+
+        this.firstDayOfWeek = firstDayOfWeek;
+        this.dailySchedules = dailySchedules;
+    }
 }

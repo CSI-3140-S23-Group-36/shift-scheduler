@@ -37,23 +37,20 @@ public class DroolsTester implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // TODO: Remove to test Drools rules
-//        if (true) return;
-
-        ScheduleRequirements requirements = new ScheduleRequirements(2, 8, 10);
+        if (true) return;
 
         KieSession session = kieContainer.newKieSession();
         List<TimePeriod> timePeriods = repository.findAll();
+
+        // Add employees
+        timePeriods.stream().map(TimePeriod::getEmployee).forEach(session::insert);
+
         List<TimePeriod> possibleShifts = generatePossibleShifts(timePeriods);
 
-        session.insert(requirements);
         possibleShifts.forEach(session::insert);
 
-        // Insert all hours of operation into the rule engine
-        for (int i = requirements.getStartHour(); i <= requirements.getEndHour(); i++)
-            session.insert(new Hour(i));
-
         for (Day day : Day.values())
-            session.insert(day);
+            session.insert(new ScheduleRequirements(2, day, 9, 10));
 
         session.fireAllRules();
 

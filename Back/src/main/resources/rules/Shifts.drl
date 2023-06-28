@@ -2,19 +2,30 @@ import shift.scheduler.app.models.Hour;
 import shift.scheduler.app.models.Day;
 import shift.scheduler.app.models.TimePeriod;
 import shift.scheduler.app.models.ScheduleRequirements;
+import shift.scheduler.app.models.Employee;
+import shift.scheduler.app.models.ScheduleForDay;
+import shift.scheduler.app.models.ScheduleForWeek;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 
 rule "Schedule for a day with 2 employees"
 when
-    Day( $day : this )
-    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $numHours : numHours )
+    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $numHours : numHours, $hours : hours )
 
-    $shift1 : TimePeriod( day == $day, $emp1 : employee, $start1 : startHour, $end1 : endHour )
-    $shift2 : TimePeriod( this != $shift1, day == $day,  $emp2 : employee, $start2 : startHour, $end2 : endHour )
+    Number( intValue < 3 ) from accumulate( ScheduleForDay( day == $day ),
+                                            init( int count = 0; ),
+                                            action( count++; ),
+                                            result( new Integer(count) ) )
+
+    $emp1 : Employee()
+    $emp2 : Employee( this != $emp1 )
+
+    $shift1 : TimePeriod( day == $day, employee == $emp1, $start1 : startHour, $end1 : endHour )
+    $shift2 : TimePeriod( this != $shift1, day == $day, employee == $emp2, $start2 : startHour, $end2 : endHour )
     $shifts : List() from collect( TimePeriod( (this == $shift1) || (this == $shift2) ) )
 
-    forall( Hour( $value : value )
+    forall( Hour( $value : value ) from $hours
             $numShifts : Number( intValue >= $numEmps ) from accumulate( TimePeriod( (startHour <= $value) && (endHour >= $value) ) from $shifts,
                                                                          init( int count = 0; ),
                                                                          action( count++; ),
@@ -24,4 +35,40 @@ then
     System.out.println($day);
     System.out.println("Shift 1: " + $shift1.getStartHour() + "-" + $shift1.getEndHour());
     System.out.println("Shift 2: " + $shift2.getStartHour() + "-" + $shift2.getEndHour());
+
+    insert(new ScheduleForDay($day, $shifts));
+end
+
+rule "Empty schedule for a non-operational day"
+when
+    ScheduleRequirements( $day : day, (numberOfEmployeesPerHour == 0) )
+then
+    insert(new ScheduleForDay($day, null));
+end
+
+rule "Schedule for a week"
+when
+    Number( intValue < 3 ) from accumulate( ScheduleForWeek(),
+                                            init( int count = 0; ),
+                                            action( count++; ),
+                                            result( new Integer(count) ) )
+
+    $mon : ScheduleForDay( day == Day.MON )
+    $tue : ScheduleForDay( day == Day.TUE )
+    $wed : ScheduleForDay( day == Day.WED )
+    $thu : ScheduleForDay( day == Day.THU )
+    $fri : ScheduleForDay( day == Day.FRI )
+    $sat : ScheduleForDay( day == Day.SAT )
+    $sun : ScheduleForDay( day == Day.SUN )
+then
+    System.out.println("TODO: Save weekly schedule");
+    List<ScheduleForDay> dailySchedules = new ArrayList<>();
+    dailySchedules.add($mon);
+    dailySchedules.add($tue);
+    dailySchedules.add($wed);
+    dailySchedules.add($thu);
+    dailySchedules.add($fri);
+    dailySchedules.add($sat);
+    dailySchedules.add($sun);
+    insert(new ScheduleForWeek(null, dailySchedules));
 end
