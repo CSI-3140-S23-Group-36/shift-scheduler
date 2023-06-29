@@ -1,4 +1,4 @@
-package shift.scheduler.app.codegen;
+package shift.scheduler;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
