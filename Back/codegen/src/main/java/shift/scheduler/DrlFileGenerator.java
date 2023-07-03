@@ -62,7 +62,7 @@ public class DrlFileGenerator {
 
         writeLine(String.format("rule \"Schedule for a day with %d employees\"", numEmployees));
         writeLine("when");
-        writeLine("    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $numHours : numHours, $hours : hours )");
+        writeLine("    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )");
         writeLine("");
         writeLine("    // Generate at most three possible schedules for each day");
         writeLine("    Number( intValue < 3 ) from accumulate( ScheduleForDay( day == $day ),");
@@ -106,6 +106,15 @@ public class DrlFileGenerator {
         writeLine("                                                                         action( count++; ),");
         writeLine("                                                                         result( new Integer(count) ) ) )");
         writeLine("then");
+        writeLine("    for (int i = 0; i < $shifts.size(); i++) {");
+        writeLine("       TimePeriod shift = (TimePeriod) $shifts.get(i);");
+        writeLine("       if (shift.getStartHour() < $startHour)");
+        writeLine("           shift.setStartHour($startHour);");
+        writeLine("");
+        writeLine("       if (shift.getEndHour() > $endHour)");
+        writeLine("           shift.setEndHour($endHour);");
+        writeLine("    }");
+        writeLine("");
         writeLine("    System.out.println(\"Schedule for \" + $day + \":\");");
 
         for (int i = 1; i <= numEmployees; i++) {

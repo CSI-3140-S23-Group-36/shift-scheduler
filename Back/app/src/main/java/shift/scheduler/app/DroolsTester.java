@@ -35,7 +35,7 @@ public class DroolsTester implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // TODO: Remove to test Drools rules
-        if (true) return;
+//        if (true) return;
 
         KieSession session = kieContainer.newKieSession();
         List<TimePeriod> timePeriods = repository.findAll();
@@ -49,7 +49,7 @@ public class DroolsTester implements CommandLineRunner {
 
         // Add schedule requirements for each day of the week
         for (Day day : Day.values())
-            session.insert(new ScheduleRequirements(2, day, 9, 10));
+            session.insert(new ScheduleRequirements(2, day, 10, 22));
 
         session.fireAllRules();
 

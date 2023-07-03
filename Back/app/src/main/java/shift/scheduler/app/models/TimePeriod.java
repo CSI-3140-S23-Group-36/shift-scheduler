@@ -72,4 +72,12 @@ public class TimePeriod {
     public Type getType() {
         return type;
     }
+
+    public void setStartHour(Integer startHour) {
+        this.startHour = startHour;
+    }
+
+    public void setEndHour(Integer endHour) {
+        this.endHour = endHour;
+    }
 }
