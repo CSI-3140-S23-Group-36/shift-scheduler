@@ -25,7 +25,6 @@ public class DrlFileGenerator {
             writer = new BufferedWriter(new FileWriter(filePath));
 
             writeImports();
-            writeLine("");
 
             for (int i = 1; i <= numDailyScheduleRules; i++)
                 writeDailyScheduleRule(i);
@@ -56,12 +55,14 @@ public class DrlFileGenerator {
         writeLine("import shift.scheduler.app.models.ScheduleForWeek;");
         writeLine("import java.util.List;");
         writeLine("import java.util.ArrayList;");
+        writeLine("");
     }
 
     private static void writeDailyScheduleRule(int numEmployees) throws IOException {
 
         writeLine(String.format("rule \"Schedule for a day with %d employees\"", numEmployees));
         writeLine("when");
+        writeLine("    SetupComplete()");
         writeLine("    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )");
         writeLine("");
         writeLine("    // Generate at most three possible schedules for each day");
@@ -71,6 +72,7 @@ public class DrlFileGenerator {
         writeLine("                                            result( new Integer(count) ) )");
         writeLine("");
 
+        // Employee selection
         for (int i = 1; i <= numEmployees; i++) {
             writer.write(String.format("    $emp%d : Employee( ", i));
 
@@ -85,9 +87,12 @@ public class DrlFileGenerator {
         }
 
         writeLine("");
+        writeLine("    // Collect all possible shifts for this day");
+        writeLine("    $potentialShifts : List() from collect( TimePeriod( day == $day ) )");
+        writeLine("");
 
         for (int i = 1; i <= numEmployees; i++)
-            writeLine(String.format("    $shift%d : TimePeriod( day == $day, employee == $emp%d )", i, i));
+            writeLine(String.format("    $shift%d : TimePeriod( day == $day, employee == $emp%d ) from $potentialShifts", i, i));
 
         writer.write("    $shifts : List() from collect( TimePeriod( ");
 
@@ -133,6 +138,7 @@ public class DrlFileGenerator {
 
         writeLine("rule \"Empty schedule for a non-operational day\"");
         writeLine("when");
+        writeLine("    SetupComplete()");
         writeLine("    ScheduleRequirements( $day : day, (numberOfEmployeesPerHour == 0) )");
         writeLine("then");
         writeLine("    insert(new ScheduleForDay($day, null));");
@@ -144,6 +150,7 @@ public class DrlFileGenerator {
 
         writeLine("rule \"Schedule for a week\"");
         writeLine("when");
+        writeLine("    SetupComplete()");
         writeLine("    Number( intValue < 3 ) from accumulate( ScheduleForWeek(),");
         writeLine("                                            init( int count = 0; ),");
         writeLine("                                            action( count++; ),");

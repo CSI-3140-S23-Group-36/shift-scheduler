@@ -20,6 +20,8 @@ import java.util.List;
 @Component
 public class DroolsTester implements CommandLineRunner {
 
+    private static final int SHIFT_LENGTH_DIVISOR = 4;
+
     private final KieContainer kieContainer;
 
     private final TimePeriodRepository repository;
@@ -38,7 +40,8 @@ public class DroolsTester implements CommandLineRunner {
 //        if (true) return;
 
         KieSession session = kieContainer.newKieSession();
-        List<TimePeriod> timePeriods = repository.findAll();
+//        List<TimePeriod> timePeriods = repository.findAll();
+        List<TimePeriod> timePeriods = repository.findAll().stream().filter(t -> t.getDay() == Day.THU).toList();
 
         // Add employees
         timePeriods.stream().map(TimePeriod::getEmployee).forEach(session::insert);
@@ -49,7 +52,7 @@ public class DroolsTester implements CommandLineRunner {
 
         // Add schedule requirements for each day of the week
         for (Day day : Day.values())
-            session.insert(new ScheduleRequirements(2, day, 10, 22));
+            session.insert(new ScheduleRequirements(2, day, 8, 24));
 
         session.fireAllRules();
 
@@ -81,7 +84,7 @@ public class DroolsTester implements CommandLineRunner {
             }
             else
             {
-                for (int start = earliestStart; start <= latestStart; start++) {
+                for (int start = earliestStart; start <= latestStart; start += SHIFT_LENGTH_DIVISOR) {
                     int end = start + shiftLength;
                     shifts.add(new TimePeriod(availability.getEmployee(),
                             null, availability.getDay(), start, end, TimePeriod.Type.SHIFT));

@@ -5,6 +5,8 @@ import java.util.List;
 
 public class ScheduleRequirements {
 
+    private static final int SHIFT_LENGTH_DIVISOR = 4;
+
     private int numberOfEmployeesPerHour;
 
     private Day day;
@@ -24,7 +26,7 @@ public class ScheduleRequirements {
         this.numHours = endHour - startHour + 1;
         this.hours = new ArrayList<>();
 
-        for (int i = startHour; i <= endHour; i++)
+        for (int i = startHour; i <= endHour; i += SHIFT_LENGTH_DIVISOR)
             this.hours.add(new Hour(i));
     }
 

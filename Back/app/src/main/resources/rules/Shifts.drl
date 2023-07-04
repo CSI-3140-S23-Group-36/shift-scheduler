@@ -8,8 +8,205 @@ import shift.scheduler.app.models.ScheduleForWeek;
 import java.util.List;
 import java.util.ArrayList;
 
+declare SetupComplete
+end
+
+declare DailyScheduleCount
+    day : Day
+    count : Integer
+end
+
+rule "Set up daily schedule counts"
+when
+    eval( true )
+then
+    for (Day day : Day.values())
+        insert(new DailyScheduleCount(day, 0));
+
+    insert(new SetupComplete());
+end
+
+rule "Schedule for a day with 1 employees"
+when
+    SetupComplete()
+    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
+
+    // Generate at most three possible schedules for each day
+    Number( intValue < 3 ) from accumulate( ScheduleForDay( day == $day ),
+                                            init( int count = 0; ),
+                                            action( count++; ),
+                                            result( new Integer(count) ) )
+
+    $emp1 : Employee(  )
+
+    // Collect all possible shifts for this day
+    $potentialShifts : List() from collect( TimePeriod( day == $day ) )
+
+    $shift1 : TimePeriod( day == $day, employee == $emp1 ) from $potentialShifts
+    $shifts : List() from collect( TimePeriod( (this == $shift1) ) )
+
+    forall( Hour( $value : value ) from $hours
+            $numShifts : Number( intValue >= $numEmps ) from accumulate( TimePeriod( (startHour <= $value) && (endHour >= $value) ) from $shifts,
+                                                                         init( int count = 0; ),
+                                                                         action( count++; ),
+                                                                         result( new Integer(count) ) ) )
+then
+    for (int i = 0; i < $shifts.size(); i++) {
+       TimePeriod shift = (TimePeriod) $shifts.get(i);
+       if (shift.getStartHour() < $startHour)
+           shift.setStartHour($startHour);
+
+       if (shift.getEndHour() > $endHour)
+           shift.setEndHour($endHour);
+    }
+
+    System.out.println("Schedule for " + $day + ":");
+    System.out.println("Shift 1: " + $shift1.getStartHour() + "-" + $shift1.getEndHour());
+
+    insert(new ScheduleForDay($day, $shifts));
+end
+
+rule "Schedule for a day with 2 employees"
+when
+    SetupComplete()
+    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
+
+    // Generate at most three possible schedules for each day
+    Number( intValue < 3 ) from accumulate( ScheduleForDay( day == $day ),
+                                            init( int count = 0; ),
+                                            action( count++; ),
+                                            result( new Integer(count) ) )
+
+    $emp1 : Employee(  )
+    $emp2 : Employee( this != $emp1 )
+
+    // Collect all possible shifts for this day
+    $potentialShifts : List() from collect( TimePeriod( day == $day ) )
+
+    $shift1 : TimePeriod( day == $day, employee == $emp1 ) from $potentialShifts
+    $shift2 : TimePeriod( day == $day, employee == $emp2 ) from $potentialShifts
+    $shifts : List() from collect( TimePeriod( (this == $shift1) || (this == $shift2) ) )
+
+    forall( Hour( $value : value ) from $hours
+            $numShifts : Number( intValue >= $numEmps ) from accumulate( TimePeriod( (startHour <= $value) && (endHour >= $value) ) from $shifts,
+                                                                         init( int count = 0; ),
+                                                                         action( count++; ),
+                                                                         result( new Integer(count) ) ) )
+then
+    for (int i = 0; i < $shifts.size(); i++) {
+       TimePeriod shift = (TimePeriod) $shifts.get(i);
+       if (shift.getStartHour() < $startHour)
+           shift.setStartHour($startHour);
+
+       if (shift.getEndHour() > $endHour)
+           shift.setEndHour($endHour);
+    }
+
+    System.out.println("Schedule for " + $day + ":");
+    System.out.println("Shift 1: " + $shift1.getStartHour() + "-" + $shift1.getEndHour());
+    System.out.println("Shift 2: " + $shift2.getStartHour() + "-" + $shift2.getEndHour());
+
+    insert(new ScheduleForDay($day, $shifts));
+end
+
+rule "Schedule for a day with 3 employees"
+when
+    SetupComplete()
+    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
+
+    // Generate at most three possible schedules for each day
+    Number( intValue < 3 ) from accumulate( ScheduleForDay( day == $day ),
+                                            init( int count = 0; ),
+                                            action( count++; ),
+                                            result( new Integer(count) ) )
+
+    $emp1 : Employee(  )
+    $emp2 : Employee( this != $emp1 )
+    $emp3 : Employee( this != $emp1, this != $emp2 )
+
+    // Collect all possible shifts for this day
+    $potentialShifts : List() from collect( TimePeriod( day == $day ) )
+
+    $shift1 : TimePeriod( day == $day, employee == $emp1 ) from $potentialShifts
+    $shift2 : TimePeriod( day == $day, employee == $emp2 ) from $potentialShifts
+    $shift3 : TimePeriod( day == $day, employee == $emp3 ) from $potentialShifts
+    $shifts : List() from collect( TimePeriod( (this == $shift1) || (this == $shift2) || (this == $shift3) ) )
+
+    forall( Hour( $value : value ) from $hours
+            $numShifts : Number( intValue >= $numEmps ) from accumulate( TimePeriod( (startHour <= $value) && (endHour >= $value) ) from $shifts,
+                                                                         init( int count = 0; ),
+                                                                         action( count++; ),
+                                                                         result( new Integer(count) ) ) )
+then
+    for (int i = 0; i < $shifts.size(); i++) {
+       TimePeriod shift = (TimePeriod) $shifts.get(i);
+       if (shift.getStartHour() < $startHour)
+           shift.setStartHour($startHour);
+
+       if (shift.getEndHour() > $endHour)
+           shift.setEndHour($endHour);
+    }
+
+    System.out.println("Schedule for " + $day + ":");
+    System.out.println("Shift 1: " + $shift1.getStartHour() + "-" + $shift1.getEndHour());
+    System.out.println("Shift 2: " + $shift2.getStartHour() + "-" + $shift2.getEndHour());
+    System.out.println("Shift 3: " + $shift3.getStartHour() + "-" + $shift3.getEndHour());
+
+    insert(new ScheduleForDay($day, $shifts));
+end
+
+rule "Schedule for a day with 4 employees"
+when
+    SetupComplete()
+    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
+
+    // Generate at most three possible schedules for each day
+    Number( intValue < 3 ) from accumulate( ScheduleForDay( day == $day ),
+                                            init( int count = 0; ),
+                                            action( count++; ),
+                                            result( new Integer(count) ) )
+
+    $emp1 : Employee(  )
+    $emp2 : Employee( this != $emp1 )
+    $emp3 : Employee( this != $emp1, this != $emp2 )
+    $emp4 : Employee( this != $emp1, this != $emp2, this != $emp3 )
+
+    // Collect all possible shifts for this day
+    $potentialShifts : List() from collect( TimePeriod( day == $day ) )
+
+    $shift1 : TimePeriod( day == $day, employee == $emp1 ) from $potentialShifts
+    $shift2 : TimePeriod( day == $day, employee == $emp2 ) from $potentialShifts
+    $shift3 : TimePeriod( day == $day, employee == $emp3 ) from $potentialShifts
+    $shift4 : TimePeriod( day == $day, employee == $emp4 ) from $potentialShifts
+    $shifts : List() from collect( TimePeriod( (this == $shift1) || (this == $shift2) || (this == $shift3) || (this == $shift4) ) )
+
+    forall( Hour( $value : value ) from $hours
+            $numShifts : Number( intValue >= $numEmps ) from accumulate( TimePeriod( (startHour <= $value) && (endHour >= $value) ) from $shifts,
+                                                                         init( int count = 0; ),
+                                                                         action( count++; ),
+                                                                         result( new Integer(count) ) ) )
+then
+    for (int i = 0; i < $shifts.size(); i++) {
+       TimePeriod shift = (TimePeriod) $shifts.get(i);
+       if (shift.getStartHour() < $startHour)
+           shift.setStartHour($startHour);
+
+       if (shift.getEndHour() > $endHour)
+           shift.setEndHour($endHour);
+    }
+
+    System.out.println("Schedule for " + $day + ":");
+    System.out.println("Shift 1: " + $shift1.getStartHour() + "-" + $shift1.getEndHour());
+    System.out.println("Shift 2: " + $shift2.getStartHour() + "-" + $shift2.getEndHour());
+    System.out.println("Shift 3: " + $shift3.getStartHour() + "-" + $shift3.getEndHour());
+    System.out.println("Shift 4: " + $shift4.getStartHour() + "-" + $shift4.getEndHour());
+
+    insert(new ScheduleForDay($day, $shifts));
+end
+
 rule "Schedule for a day with 5 employees"
 when
+    SetupComplete()
     ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
 
     // Generate at most three possible schedules for each day
@@ -24,11 +221,14 @@ when
     $emp4 : Employee( this != $emp1, this != $emp2, this != $emp3 )
     $emp5 : Employee( this != $emp1, this != $emp2, this != $emp3, this != $emp4 )
 
-    $shift1 : TimePeriod( day == $day, employee == $emp1 )
-    $shift2 : TimePeriod( day == $day, employee == $emp2 )
-    $shift3 : TimePeriod( day == $day, employee == $emp3 )
-    $shift4 : TimePeriod( day == $day, employee == $emp4 )
-    $shift5 : TimePeriod( day == $day, employee == $emp5 )
+    // Collect all possible shifts for this day
+    $potentialShifts : List() from collect( TimePeriod( day == $day ) )
+
+    $shift1 : TimePeriod( day == $day, employee == $emp1 ) from $potentialShifts
+    $shift2 : TimePeriod( day == $day, employee == $emp2 ) from $potentialShifts
+    $shift3 : TimePeriod( day == $day, employee == $emp3 ) from $potentialShifts
+    $shift4 : TimePeriod( day == $day, employee == $emp4 ) from $potentialShifts
+    $shift5 : TimePeriod( day == $day, employee == $emp5 ) from $potentialShifts
     $shifts : List() from collect( TimePeriod( (this == $shift1) || (this == $shift2) || (this == $shift3) || (this == $shift4) || (this == $shift5) ) )
 
     forall( Hour( $value : value ) from $hours
@@ -37,6 +237,14 @@ when
                                                                          action( count++; ),
                                                                          result( new Integer(count) ) ) )
 then
+    for (int i = 0; i < $shifts.size(); i++) {
+       TimePeriod shift = (TimePeriod) $shifts.get(i);
+       if (shift.getStartHour() < $startHour)
+           shift.setStartHour($startHour);
+
+       if (shift.getEndHour() > $endHour)
+           shift.setEndHour($endHour);
+    }
 
     System.out.println("Schedule for " + $day + ":");
     System.out.println("Shift 1: " + $shift1.getStartHour() + "-" + $shift1.getEndHour());
@@ -50,6 +258,7 @@ end
 
 rule "Empty schedule for a non-operational day"
 when
+    SetupComplete()
     ScheduleRequirements( $day : day, (numberOfEmployeesPerHour == 0) )
 then
     insert(new ScheduleForDay($day, null));
@@ -57,6 +266,7 @@ end
 
 rule "Schedule for a week"
 when
+    SetupComplete()
     Number( intValue < 3 ) from accumulate( ScheduleForWeek(),
                                             init( int count = 0; ),
                                             action( count++; ),
