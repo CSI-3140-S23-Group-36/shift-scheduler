@@ -37,27 +37,47 @@ public class DroolsTester implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // TODO: Remove to test Drools rules
-//        if (true) return;
+        if (true) return;
 
+        List<List<ScheduleForDay>> dailySchedules = new ArrayList<>();
+
+        for (int i = 0; i < 7; i++)
+            dailySchedules.add(new ArrayList<>());
+
+        // Generate daily schedules
+        for (Day day : Day.values()) {
+            KieSession session = kieContainer.newKieSession();
+
+            List<TimePeriod> timePeriods = repository.findByDay(day);
+
+            // Add schedule requirements for the day
+            session.insert(new ScheduleRequirements(2, day, 8, 16));
+
+            // Add employees
+            timePeriods.stream().map(TimePeriod::getEmployee).forEach(session::insert);
+
+            // Add possible shifts
+            List<TimePeriod> possibleShifts = generatePossibleShifts(timePeriods);
+            possibleShifts.forEach(session::insert);
+
+            session.fireAllRules();
+
+            /* Retrieve the generated schedules
+               Based on https://stackoverflow.com/questions/15035209/ */
+            List<ScheduleForDay> schedules = dailySchedules.get(day.ordinal());
+            QueryResults results = session.getQueryResults("getDailySchedules");
+            results.forEach(row -> schedules.add((ScheduleForDay) row.get("$dailySchedule")));
+
+            session.dispose();
+        }
+
+        // Generate weekly schedules
         KieSession session = kieContainer.newKieSession();
-//        List<TimePeriod> timePeriods = repository.findAll();
-        List<TimePeriod> timePeriods = repository.findAll().stream().filter(t -> t.getDay() == Day.THU).toList();
 
-        // Add employees
-        timePeriods.stream().map(TimePeriod::getEmployee).forEach(session::insert);
-
-        // Add possible shifts
-        List<TimePeriod> possibleShifts = generatePossibleShifts(timePeriods);
-        possibleShifts.forEach(session::insert);
-
-        // Add schedule requirements for each day of the week
-        for (Day day : Day.values())
-            session.insert(new ScheduleRequirements(2, day, 8, 24));
+        dailySchedules.forEach(scheduleList -> scheduleList.forEach(session::insert));
 
         session.fireAllRules();
 
-        /* Retrieve the generated schedules
-           Based on https://stackoverflow.com/questions/15035209/ */
         List<ScheduleForWeek> schedules = new ArrayList<>();
         QueryResults results = session.getQueryResults("getWeeklySchedules");
         results.forEach(row -> schedules.add((ScheduleForWeek) row.get("$schedule")));

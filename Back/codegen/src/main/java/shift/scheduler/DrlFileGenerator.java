@@ -62,7 +62,6 @@ public class DrlFileGenerator {
 
         writeLine(String.format("rule \"Schedule for a day with %d employees\"", numEmployees));
         writeLine("when");
-        writeLine("    SetupComplete()");
         writeLine("    ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )");
         writeLine("");
         writeLine("    // Generate at most three possible schedules for each day");
@@ -138,7 +137,6 @@ public class DrlFileGenerator {
 
         writeLine("rule \"Empty schedule for a non-operational day\"");
         writeLine("when");
-        writeLine("    SetupComplete()");
         writeLine("    ScheduleRequirements( $day : day, (numberOfEmployeesPerHour == 0) )");
         writeLine("then");
         writeLine("    insert(new ScheduleForDay($day, null));");
@@ -150,7 +148,6 @@ public class DrlFileGenerator {
 
         writeLine("rule \"Schedule for a week\"");
         writeLine("when");
-        writeLine("    SetupComplete()");
         writeLine("    Number( intValue < 3 ) from accumulate( ScheduleForWeek(),");
         writeLine("                                            init( int count = 0; ),");
         writeLine("                                            action( count++; ),");

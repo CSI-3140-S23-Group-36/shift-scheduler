@@ -8,27 +8,8 @@ import shift.scheduler.app.models.ScheduleForWeek;
 import java.util.List;
 import java.util.ArrayList;
 
-declare SetupComplete
-end
-
-declare DailyScheduleCount
-    day : Day
-    count : Integer
-end
-
-rule "Set up daily schedule counts"
-when
-    eval( true )
-then
-    for (Day day : Day.values())
-        insert(new DailyScheduleCount(day, 0));
-
-    insert(new SetupComplete());
-end
-
 rule "Schedule for a day with 1 employees"
 when
-    SetupComplete()
     ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
 
     // Generate at most three possible schedules for each day
@@ -68,7 +49,6 @@ end
 
 rule "Schedule for a day with 2 employees"
 when
-    SetupComplete()
     ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
 
     // Generate at most three possible schedules for each day
@@ -111,7 +91,6 @@ end
 
 rule "Schedule for a day with 3 employees"
 when
-    SetupComplete()
     ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
 
     // Generate at most three possible schedules for each day
@@ -157,7 +136,6 @@ end
 
 rule "Schedule for a day with 4 employees"
 when
-    SetupComplete()
     ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
 
     // Generate at most three possible schedules for each day
@@ -206,7 +184,6 @@ end
 
 rule "Schedule for a day with 5 employees"
 when
-    SetupComplete()
     ScheduleRequirements( $numEmps : numberOfEmployeesPerHour, $day : day, $startHour : startHour, $endHour : endHour, $numHours : numHours, $hours : hours )
 
     // Generate at most three possible schedules for each day
@@ -258,7 +235,6 @@ end
 
 rule "Empty schedule for a non-operational day"
 when
-    SetupComplete()
     ScheduleRequirements( $day : day, (numberOfEmployeesPerHour == 0) )
 then
     insert(new ScheduleForDay($day, null));
@@ -266,7 +242,6 @@ end
 
 rule "Schedule for a week"
 when
-    SetupComplete()
     Number( intValue < 3 ) from accumulate( ScheduleForWeek(),
                                             init( int count = 0; ),
                                             action( count++; ),
