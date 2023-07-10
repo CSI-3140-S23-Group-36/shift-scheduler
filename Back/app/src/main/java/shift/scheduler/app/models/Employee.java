@@ -32,4 +32,8 @@ public class Employee extends User {
     public Integer getMaxHoursPerDay() {
         return maxHoursPerDay;
     }
+
+    public void setMaxHoursPerDay(Integer maxHoursPerDay) {
+        this.maxHoursPerDay = maxHoursPerDay;
+    }
 }
