@@ -1,5 +1,6 @@
 package shift.scheduler.app.controllers;
 
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,19 +17,19 @@ public class TestController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public String userAccess() {
         return "User Content.";
     }
 
     @GetMapping("/employee")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MANAGER')")
     public String employeeAccess() {
         return "Employee Content.";
     }
 
     @GetMapping("/manager")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public String moderatorAccess() {
         return "Manager content.";
     }

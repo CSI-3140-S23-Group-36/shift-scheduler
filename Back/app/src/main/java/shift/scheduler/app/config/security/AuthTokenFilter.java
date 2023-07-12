@@ -3,8 +3,6 @@ package shift.scheduler.app.config.security;
 
 import java.io.IOException;
 
-import java.io.IOException;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 
 public class AuthTokenFilter extends OncePerRequestFilter {
+
     @Autowired
     private JwtUtils jwtUtils;
 
