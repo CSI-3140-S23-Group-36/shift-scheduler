@@ -4,11 +4,12 @@ import AvailabilityForm from "./components/pages/employee/availabilityForm";
 import GenerateSchedule from "./components/pages/manager/generateSchedule";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import Login from "./components/pages/login/login";
-import ManagerHome from "./components/pages/manager/manage-home";
+import ManagerHome from "./components/pages/manager/manager-home";
 import EmployeeHome from "./components/pages/employee/employee-home";
 
 const router = createHashRouter([
   { path: "*", element: <Error /> },
+  { path: "/", element: <Login /> },
   { path: "/login", element: <Login /> },
   { path: "/manager-home", element: <ManagerHome /> },
   { path: "/employee-home", element: <EmployeeHome /> },
