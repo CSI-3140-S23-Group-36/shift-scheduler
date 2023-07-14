@@ -31,6 +31,7 @@ public class DrlFileGenerator {
 
             writeEmptyScheduleRule();
             writeScheduleForWeekRule();
+            writeDailySchedulesQuery();
             writeWeeklySchedulesQuery();
 
             writer.close();
@@ -175,10 +176,19 @@ public class DrlFileGenerator {
         writeLine("");
     }
 
+    private static void writeDailySchedulesQuery() throws IOException {
+
+        writeLine("query \"getDailySchedules\"");
+        writeLine("    $dailySchedule : ScheduleForDay()");
+        writeLine("end");
+        writeLine("");
+    }
+
     private static void writeWeeklySchedulesQuery() throws IOException {
 
         writeLine("query \"getWeeklySchedules\"");
         writeLine("    $schedule : ScheduleForWeek()");
         writeLine("end");
+        writeLine("");
     }
 }
