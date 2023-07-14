@@ -1,10 +1,9 @@
-package shift.scheduler.app;
+package shift.scheduler.app.generator;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.QueryResults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import shift.scheduler.app.models.*;
 import shift.scheduler.app.repositories.TimePeriodRepository;
@@ -12,13 +11,8 @@ import shift.scheduler.app.repositories.TimePeriodRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * TODO: Remove this class later
- * A temporary class used to test Drools rules and queries while implementing
- * the shift scheduling algorithm.
- */
 @Component
-public class DroolsTester implements CommandLineRunner {
+public class ScheduleGenerator {
 
     private static final int SHIFT_LENGTH_DIVISOR = 4;
 
@@ -27,17 +21,13 @@ public class DroolsTester implements CommandLineRunner {
     private final TimePeriodRepository repository;
 
     @Autowired
-    public DroolsTester(KieContainer kieContainer, TimePeriodRepository repository) {
+    public ScheduleGenerator(KieContainer kieContainer, TimePeriodRepository repository) {
 
         this.kieContainer = kieContainer;
         this.repository = repository;
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-
-        // TODO: Remove to test Drools rules
-        if (true) return;
+    public List<ScheduleForWeek> generateSchedules(ScheduleRequirements[] requirements) {
 
         List<List<ScheduleForDay>> dailySchedules = new ArrayList<>();
 
@@ -51,7 +41,7 @@ public class DroolsTester implements CommandLineRunner {
             List<TimePeriod> timePeriods = repository.findByDay(day);
 
             // Add schedule requirements for the day
-            session.insert(new ScheduleRequirements(2, day, 8, 16));
+            session.insert(requirements[day.ordinal()]);
 
             // Add employees
             timePeriods.stream().map(TimePeriod::getEmployee).forEach(session::insert);
@@ -81,11 +71,12 @@ public class DroolsTester implements CommandLineRunner {
         List<ScheduleForWeek> schedules = new ArrayList<>();
         QueryResults results = session.getQueryResults("getWeeklySchedules");
         results.forEach(row -> schedules.add((ScheduleForWeek) row.get("$schedule")));
-
         session.dispose();
+
+        return schedules;
     }
 
-    public List<TimePeriod> generatePossibleShifts(List<TimePeriod> availabilities) {
+    private List<TimePeriod> generatePossibleShifts(List<TimePeriod> availabilities) {
 
         List<TimePeriod> shifts = new ArrayList<>();
 

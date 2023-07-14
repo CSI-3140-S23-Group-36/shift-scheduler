@@ -267,6 +267,10 @@ then
     insert(new ScheduleForWeek(null, dailySchedules));
 end
 
+query "getDailySchedules"
+    $dailySchedule : ScheduleForDay()
+end
+
 query "getWeeklySchedules"
     $schedule : ScheduleForWeek()
 end
