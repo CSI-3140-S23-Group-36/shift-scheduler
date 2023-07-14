@@ -1,5 +1,6 @@
 package shift.scheduler.app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ public class User {
 
     @NotNull
     @NotBlank
+    @JsonIgnore
     private String passwordHash;
 
     public Long getId() {

@@ -28,4 +28,8 @@ public class ScheduleForDay {
     public Day getDay() {
         return day;
     }
+
+    public List<TimePeriod> getShifts() {
+        return shifts;
+    }
 }

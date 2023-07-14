@@ -274,3 +274,4 @@ end
 query "getWeeklySchedules"
     $schedule : ScheduleForWeek()
 end
+

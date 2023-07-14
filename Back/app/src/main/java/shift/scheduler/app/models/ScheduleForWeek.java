@@ -25,4 +25,12 @@ public class ScheduleForWeek {
         this.firstDayOfWeek = firstDayOfWeek;
         this.dailySchedules = dailySchedules;
     }
+
+    public Date getFirstDayOfWeek() {
+        return firstDayOfWeek;
+    }
+
+    public List<ScheduleForDay> getDailySchedules() {
+        return dailySchedules;
+    }
 }
