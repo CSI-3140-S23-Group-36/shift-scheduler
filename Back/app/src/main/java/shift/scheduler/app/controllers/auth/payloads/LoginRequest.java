@@ -1,4 +1,4 @@
-package shift.scheduler.app.controllers.payloads;
+package shift.scheduler.app.controllers.auth.payloads;
 
 
 import jakarta.validation.constraints.NotBlank;

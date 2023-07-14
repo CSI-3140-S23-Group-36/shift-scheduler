@@ -1,4 +1,4 @@
-package shift.scheduler.app.controllers;
+package shift.scheduler.app.controllers.auth;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import shift.scheduler.app.config.security.JwtUtils;
 import shift.scheduler.app.config.security.UserDetailsImpl;
-import shift.scheduler.app.controllers.payloads.LoginRequest;
-import shift.scheduler.app.controllers.payloads.SignupRequest;
-import shift.scheduler.app.controllers.responses.MessageResponse;
-import shift.scheduler.app.controllers.responses.UserInfoResponse;
+import shift.scheduler.app.controllers.auth.payloads.LoginRequest;
+import shift.scheduler.app.controllers.auth.payloads.SignupRequest;
+import shift.scheduler.app.controllers.auth.responses.MessageResponse;
+import shift.scheduler.app.controllers.auth.responses.UserInfoResponse;
 import shift.scheduler.app.models.Employee;
 import shift.scheduler.app.models.Manager;
 import shift.scheduler.app.models.User;
@@ -25,7 +25,6 @@ import shift.scheduler.app.repositories.EmployeeRepository;
 import shift.scheduler.app.repositories.ManagerRepository;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

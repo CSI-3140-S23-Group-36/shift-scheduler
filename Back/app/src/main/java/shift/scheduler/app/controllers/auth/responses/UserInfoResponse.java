@@ -1,4 +1,4 @@
-package shift.scheduler.app.controllers.responses;
+package shift.scheduler.app.controllers.auth.responses;
 
 
 import java.util.List;

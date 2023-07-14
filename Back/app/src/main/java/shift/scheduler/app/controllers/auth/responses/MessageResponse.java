@@ -1,4 +1,4 @@
-package shift.scheduler.app.controllers.responses;
+package shift.scheduler.app.controllers.auth.responses;
 
 public class MessageResponse {
     private String message;

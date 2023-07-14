@@ -1,8 +1,6 @@
-package shift.scheduler.app.controllers.payloads;
+package shift.scheduler.app.controllers.auth.payloads;
 
 import jakarta.validation.constraints.*;
-
-import java.util.Set;
 
 public class SignupRequest {
     @NotBlank
