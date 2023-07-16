@@ -4,10 +4,14 @@ import Page from "../../page";
 import { useNavigate } from "react-router-dom";
 import { UserInfoResponse } from "../../../api-interfaces/responses/user-info";
 import { config } from "../../../config";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../store";
+import { authSlice } from "../../../authSlice";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
 
   const navigate = useNavigate();
 
@@ -29,6 +33,7 @@ export default function Login() {
       },
     });
     const userInfoResponse = (await response.json()) as UserInfoResponse;
+    dispatch(authSlice.actions.setLogin(userInfoResponse));
     if (userInfoResponse.roles.includes("MANAGER")) {
       navigate("/manager-home");
     } else if (userInfoResponse.roles.includes("EMPLOYEE")) {
