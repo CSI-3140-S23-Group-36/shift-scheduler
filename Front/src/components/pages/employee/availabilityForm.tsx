@@ -1,5 +1,10 @@
 import Page from "../../page";
+import React from "react";
 
 export default function AvailabilityForm() {
-  return <Page>Availability form goes here</Page>;
+  return (
+    <Page>
+      <div></div>
+    </Page>
+  );
 }
