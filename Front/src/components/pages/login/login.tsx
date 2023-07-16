@@ -25,13 +25,19 @@ export default function Login() {
   };
 
   const handleLogin = async () => {
-    const response = await fetch(`${config.apiBaseAddress}auth/signin`, {
-      method: "POST",
-      body: JSON.stringify({ username: username, password: password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let response;
+    try {
+      response = await fetch(`${config.apiBaseAddress}auth/signin`, {
+        method: "POST",
+        body: JSON.stringify({ username: username, password: password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (ex) {
+      console.log("Could not communicate with db");
+      return;
+    }
     const userInfoResponse = (await response.json()) as UserInfoResponse;
     dispatch(authSlice.actions.setLogin(userInfoResponse));
     if (userInfoResponse.roles.includes("MANAGER")) {

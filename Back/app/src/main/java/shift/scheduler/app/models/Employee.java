@@ -36,4 +36,20 @@ public class Employee extends User {
     public void setMaxHoursPerDay(Integer maxHoursPerDay) {
         this.maxHoursPerDay = maxHoursPerDay;
     }
+
+    public List<TimePeriod> getAvailabilities() {
+        return availabilities;
+    }
+
+    public void setAvailabilities(List<TimePeriod> availabilities) {
+        this.availabilities = availabilities;
+    }
+
+    public List<TimePeriod> getShifts() {
+        return shifts;
+    }
+
+    public void setShifts(List<TimePeriod> shifts) {
+        this.shifts = shifts;
+    }
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Error from "./components/pages/common/error";
-import AvailabilityForm from "./components/pages/employee/availabilityForm";
+import AvailabilityForm from "./components/pages/employee/availability-form";
 import GenerateSchedule from "./components/pages/manager/generateSchedule";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import Login from "./components/pages/login/login";

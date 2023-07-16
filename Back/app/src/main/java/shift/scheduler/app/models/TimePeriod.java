@@ -80,4 +80,28 @@ public class TimePeriod {
     public void setEndHour(Integer endHour) {
         this.endHour = endHour;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setDay(Day day) {
+        this.day = day;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 }
