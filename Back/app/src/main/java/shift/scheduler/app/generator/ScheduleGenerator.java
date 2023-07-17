@@ -38,7 +38,7 @@ public class ScheduleGenerator {
         for (Day day : Day.values()) {
             KieSession session = kieContainer.newKieSession();
 
-            List<TimePeriod> timePeriods = repository.findByDay(day);
+            List<TimePeriod> timePeriods = repository.findByTypeAndDay(TimePeriod.Type.AVAILABILITY, day);
 
             // Add schedule requirements for the day
             session.insert(requirements[day.ordinal()]);

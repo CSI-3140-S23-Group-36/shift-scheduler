@@ -17,6 +17,8 @@ public interface TimePeriodRepository extends Repository<TimePeriod, Integer> {
 
     List<TimePeriod> findByDay(Day day);
 
+    List<TimePeriod> findByTypeAndDay(TimePeriod.Type type, Day day);
+
     TimePeriod save(TimePeriod timePeriod);
 
     @Modifying
