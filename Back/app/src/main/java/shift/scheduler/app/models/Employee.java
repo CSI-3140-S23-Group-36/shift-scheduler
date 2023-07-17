@@ -20,12 +20,12 @@ public class Employee extends User {
     private Integer maxHoursPerDay;
     
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    @Where(clause = "type == 0")
+    @Where(clause = "type = 0")
     @Size(max = 7)
     private List<TimePeriod> availabilities;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    @Where(clause = "type == 1")
+    @Where(clause = "type = 1")
     private List<TimePeriod> shifts;
 
 
