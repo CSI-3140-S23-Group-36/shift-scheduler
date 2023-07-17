@@ -6,8 +6,10 @@ import org.kie.api.runtime.rule.QueryResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import shift.scheduler.app.models.*;
+import shift.scheduler.app.repositories.ScheduleForWeekRepository;
 import shift.scheduler.app.repositories.TimePeriodRepository;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,15 +18,21 @@ public class ScheduleGenerator {
 
     private static final int SHIFT_LENGTH_DIVISOR = 4;
 
+    private static final long NUM_MILLIS_PER_DAY = 86_400_000;
+
     private final KieContainer kieContainer;
 
-    private final TimePeriodRepository repository;
+    private final TimePeriodRepository timePeriodRepository;
+
+    private final ScheduleForWeekRepository scheduleForWeekRepository;
 
     @Autowired
-    public ScheduleGenerator(KieContainer kieContainer, TimePeriodRepository repository) {
+    public ScheduleGenerator(KieContainer kieContainer, TimePeriodRepository timePeriodRepository,
+                             ScheduleForWeekRepository scheduleForWeekRepository) {
 
         this.kieContainer = kieContainer;
-        this.repository = repository;
+        this.timePeriodRepository = timePeriodRepository;
+        this.scheduleForWeekRepository = scheduleForWeekRepository;
     }
 
     public List<ScheduleForWeek> generateSchedules(ScheduleRequirements[] requirements) {
@@ -38,7 +46,7 @@ public class ScheduleGenerator {
         for (Day day : Day.values()) {
             KieSession session = kieContainer.newKieSession();
 
-            List<TimePeriod> timePeriods = repository.findByTypeAndDay(TimePeriod.Type.AVAILABILITY, day);
+            List<TimePeriod> timePeriods = timePeriodRepository.findByTypeAndDay(TimePeriod.Type.AVAILABILITY, day);
 
             // Add schedule requirements for the day
             session.insert(requirements[day.ordinal()]);
@@ -104,5 +112,33 @@ public class ScheduleGenerator {
         }
 
         return shifts;
+    }
+
+    public boolean saveShifts(ScheduleForWeek schedule) {
+
+        /* Increment the first day of the week, since the date gets deserialized incorrectly to be one day
+           sooner than the provided date; sql.Date could be replaced with some other class if time permits
+           later */
+        schedule.setFirstDayOfWeek(new Date(schedule.getFirstDayOfWeek().getTime() + NUM_MILLIS_PER_DAY));
+        Date date = schedule.getFirstDayOfWeek();
+
+        // Set the date of each shift before saving the schedule
+        for (int i = 0; i < schedule.getDailySchedules().size(); i++) {
+            long dateIncrement = i * NUM_MILLIS_PER_DAY;
+            ScheduleForDay dailySchedule = schedule.getDailySchedules().get(i);
+
+            dailySchedule.getShifts().forEach(shift -> shift.setDate(
+                    new Date(date.getTime() + dateIncrement))
+            );
+        }
+
+        try {
+            scheduleForWeekRepository.save(schedule);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }

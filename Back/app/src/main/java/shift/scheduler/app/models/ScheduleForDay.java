@@ -15,9 +15,11 @@ public class ScheduleForDay {
     @NotNull
     private Day day;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     @Column(name = "shift_id")
     private List<TimePeriod> shifts;
+
+    public ScheduleForDay() {}
 
     public ScheduleForDay(Day day, List<TimePeriod> shifts) {
 
@@ -31,5 +33,13 @@ public class ScheduleForDay {
 
     public List<TimePeriod> getShifts() {
         return shifts;
+    }
+
+    public void setDay(Day day) {
+        this.day = day;
+    }
+
+    public void setShifts(List<TimePeriod> shifts) {
+        this.shifts = shifts;
     }
 }

@@ -3,8 +3,10 @@ package shift.scheduler.app.models;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import shift.scheduler.app.jackson.EmployeeDeserializer;
 
 import java.sql.Date;
 
@@ -25,6 +27,7 @@ public class TimePeriod {
     @ManyToOne
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
+    @JsonDeserialize(using = EmployeeDeserializer.class)
     private Employee employee;
 
     private Date date;

@@ -51,4 +51,22 @@ public class GenerationController {
         return ResponseEntity.ok(schedulesJSON);
     }
 
+    @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public ResponseEntity<String> saveGeneratedSchedule(@RequestBody String scheduleJSON) {
+
+        ScheduleForWeek schedule = null;
+
+        try {
+            schedule = objectMapper.readValue(scheduleJSON, ScheduleForWeek.class);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Failed to parse the schedule.");
+        }
+
+        if (scheduleGenerator.saveShifts(schedule))
+            return ResponseEntity.ok("Schedule saved.");
+        else
+            return ResponseEntity.internalServerError().body("Failed to save the schedule.");
+    }
+
 }

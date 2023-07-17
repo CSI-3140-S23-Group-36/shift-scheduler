@@ -1,5 +1,7 @@
 package shift.scheduler.app.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.OptBoolean;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -14,11 +16,14 @@ public class ScheduleForWeek {
     private Long id;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date firstDayOfWeek;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @Column(name = "daily_schedule_id")
     private List<ScheduleForDay> dailySchedules;
+
+    public ScheduleForWeek() {}
 
     public ScheduleForWeek(Date firstDayOfWeek, List<ScheduleForDay> dailySchedules) {
 
@@ -32,5 +37,13 @@ public class ScheduleForWeek {
 
     public List<ScheduleForDay> getDailySchedules() {
         return dailySchedules;
+    }
+
+    public void setFirstDayOfWeek(Date firstDayOfWeek) {
+        this.firstDayOfWeek = firstDayOfWeek;
+    }
+
+    public void setDailySchedules(List<ScheduleForDay> dailySchedules) {
+        this.dailySchedules = dailySchedules;
     }
 }
