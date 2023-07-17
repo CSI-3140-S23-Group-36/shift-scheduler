@@ -14,7 +14,7 @@ import shift.scheduler.app.repositories.EmployeeRepository;
 
 import java.util.List;
 
-@CrossOrigin(origins = "/**", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/availabilities")
 public class AvailabilityController {

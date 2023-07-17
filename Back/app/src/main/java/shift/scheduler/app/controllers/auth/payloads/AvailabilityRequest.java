@@ -1,6 +1,7 @@
 package shift.scheduler.app.controllers.auth.payloads;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class AvailabilityRequest {
     @NotBlank
@@ -8,10 +9,10 @@ public class AvailabilityRequest {
 
     @NotBlank
     private String day;
-    @NotBlank
-    private int from;
-    @NotBlank
-    private int to;
+    @NotNull
+    private Integer from;
+    @NotNull
+    private Integer to;
 
     public String getUsername() {
         return username;
