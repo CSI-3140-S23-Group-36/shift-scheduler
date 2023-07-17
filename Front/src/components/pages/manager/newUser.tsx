@@ -1,4 +1,3 @@
-export {};
 import Page from "../../page";
 import { useNavigate } from "react-router-dom";
 
