@@ -30,6 +30,7 @@ export default function Login() {
       response = await fetch(`${config.apiBaseAddress}auth/signin`, {
         method: "POST",
         body: JSON.stringify({ username: username, password: password }),
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
