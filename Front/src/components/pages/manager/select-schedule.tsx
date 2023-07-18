@@ -1,513 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Page from "../../page";
-
-const testSchedules: Schedule[] = [
-  {
-    firstDayOfWeek: null,
-    dailySchedules: [
-      {
-        day: "MON",
-        shifts: [
-          {
-            id: null,
-            employee: 5,
-            date: null,
-            day: "MON",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "MON",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "TUE",
-        shifts: [
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "TUE",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "TUE",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "WED",
-        shifts: [
-          {
-            id: null,
-            employee: 8,
-            date: null,
-            day: "WED",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "WED",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "THU",
-        shifts: [
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "THU",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "THU",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "FRI",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "FRI",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 1,
-            date: null,
-            day: "FRI",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "SAT",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "SAT",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "SAT",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "SUN",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "SUN",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 4,
-            date: null,
-            day: "SUN",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    firstDayOfWeek: null,
-    dailySchedules: [
-      {
-        day: "MON",
-        shifts: [
-          {
-            id: null,
-            employee: 5,
-            date: null,
-            day: "MON",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "MON",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "TUE",
-        shifts: [
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "TUE",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "TUE",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "WED",
-        shifts: [
-          {
-            id: null,
-            employee: 8,
-            date: null,
-            day: "WED",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "WED",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "THU",
-        shifts: [
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "THU",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "THU",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "FRI",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "FRI",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 1,
-            date: null,
-            day: "FRI",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "SAT",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "SAT",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "SAT",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "SUN",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "SUN",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 4,
-            date: null,
-            day: "SUN",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    firstDayOfWeek: null,
-    dailySchedules: [
-      {
-        day: "MON",
-        shifts: [
-          {
-            id: null,
-            employee: 5,
-            date: null,
-            day: "MON",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "MON",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "TUE",
-        shifts: [
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "TUE",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "TUE",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "WED",
-        shifts: [
-          {
-            id: null,
-            employee: 8,
-            date: null,
-            day: "WED",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "WED",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "THU",
-        shifts: [
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "THU",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 2,
-            date: null,
-            day: "THU",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "FRI",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "FRI",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 1,
-            date: null,
-            day: "FRI",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "SAT",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "SAT",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 3,
-            date: null,
-            day: "SAT",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-      {
-        day: "SUN",
-        shifts: [
-          {
-            id: null,
-            employee: 9,
-            date: null,
-            day: "SUN",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-          {
-            id: null,
-            employee: 5,
-            date: null,
-            day: "SUN",
-            startHour: 12,
-            endHour: 20,
-            type: "SHIFT",
-          },
-        ],
-      },
-    ],
-  },
-];
+import { config } from "../../../config";
+import { useLocation } from "react-router-dom";
 
 type Day = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
 
 interface Shift {
-  id: any;
+  id: unknown;
   employee: number;
-  date: any;
+  date: unknown;
   day: Day;
   startHour: number;
   endHour: number;
@@ -520,7 +21,7 @@ interface DailySchedule {
 }
 
 interface Schedule {
-  firstDayOfWeek: any;
+  firstDayOfWeek: string;
   dailySchedules: DailySchedule[];
 }
 
@@ -570,7 +71,28 @@ function ScheduleOption(props: { schedule: Schedule }): JSX.Element {
           </tbody>
         </table>
         <div className="d-flex justify-content-end">
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            onClick={async () => {
+              let response;
+              try {
+                response = await fetch(
+                  `${config.apiBaseAddress}generate/save`,
+                  {
+                    credentials: "include",
+                    method: "POST",
+                    body: JSON.stringify(props.schedule),
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
+                );
+              } catch (ex) {
+                console.log("Could not communicate with db");
+                return;
+              }
+            }}
+          >
             Select
           </button>
         </div>
@@ -580,15 +102,19 @@ function ScheduleOption(props: { schedule: Schedule }): JSX.Element {
 }
 
 export default function SelectSchedule() {
+  const location = useLocation();
+  const schedules: Schedule[] = location.state?.schedules;
   return (
     <Page>
       <div className="container">
         <h1>Select a schedule:</h1>
-        <div>
-          {testSchedules.map((x, i) => (
-            <ScheduleOption key={i} schedule={x}></ScheduleOption>
-          ))}
-        </div>
+        {schedules && (
+          <div>
+            {schedules.map((x, i) => (
+              <ScheduleOption key={i} schedule={x}></ScheduleOption>
+            ))}
+          </div>
+        )}
       </div>
     </Page>
   );
