@@ -4,12 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import shift.scheduler.app.config.security.JwtUtils;
 import shift.scheduler.app.controllers.auth.AuthController;
 import shift.scheduler.app.models.Manager;
 import shift.scheduler.app.repositories.ManagerRepository;
@@ -19,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AuthControllerTests {
 
     @Autowired
@@ -31,11 +30,7 @@ public class AuthControllerTests {
     private ManagerRepository managerRepository;
 
     @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
     private PasswordEncoder encoder;
-
 
     @Test
     public void validLoginShouldReturnOk() throws Exception {
