@@ -61,6 +61,34 @@ public class AuthControllerTests {
         ).andExpect(status().isUnauthorized());
     }
 
+    @Test
+    public void validSignupShouldReturnOk() throws Exception {
+
+        mockMvc.perform(
+                post("/api/auth/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createSignupJson("Test", "test", "awfulpassword"))
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    public void signupWithShortPasswordShouldReturnBadRequest() throws Exception {
+
+        mockMvc.perform(
+                post("/api/auth/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createSignupJson("Test", "test", "test"))
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void signoutShouldReturnOk() throws Exception {
+
+        mockMvc.perform(
+                post("/api/auth/signout")
+        ).andExpect(status().isOk());
+    }
+
     //===== Helper Methods =====//
 
     public Manager createManager() {
@@ -69,5 +97,11 @@ public class AuthControllerTests {
 
     public String createLoginJson(String username, String password) {
         return String.format("{\"username\": \"%s\", \"password\": \"%s\"}", username, password);
+    }
+
+    public String createSignupJson(String name, String username, String password) {
+
+        return String.format("{\"username\": \"%s\", \"name\": \"%s\", \"role\": \"EMPLOYEE\",  \"password\": \"%s\"}",
+                name, username, password);
     }
 }
