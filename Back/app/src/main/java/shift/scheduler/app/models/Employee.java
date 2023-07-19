@@ -28,6 +28,13 @@ public class Employee extends User {
     @Where(clause = "type = 1")
     private List<TimePeriod> shifts;
 
+    public Employee() {}
+
+    public Employee(String name, String username, String passwordHash, int maxHoursPerDay) {
+        super(name, username, passwordHash);
+        this.maxHoursPerDay = maxHoursPerDay;
+    }
+
 
     public Integer getMaxHoursPerDay() {
         return maxHoursPerDay;
