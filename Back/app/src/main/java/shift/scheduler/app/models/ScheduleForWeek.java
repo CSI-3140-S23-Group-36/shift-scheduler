@@ -16,6 +16,7 @@ public class ScheduleForWeek {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date firstDayOfWeek;
 
