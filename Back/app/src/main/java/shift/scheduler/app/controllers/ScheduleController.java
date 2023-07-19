@@ -28,9 +28,7 @@ public class ScheduleController {
                                                      @RequestParam(name = "month") String month,
                                                      @RequestParam(name = "day") String day) {
 
-        Date firstDayOfWeek = new Date(Integer.parseInt(year) - 1900,
-                Integer.parseInt(month) - 1,
-                Integer.parseInt(day));
+        Date firstDayOfWeek = stringComponentsToSqlDate(year, month, day);
 
         ScheduleForWeek schedule = repository.findByFirstDayOfWeek(firstDayOfWeek);
 
@@ -41,5 +39,25 @@ public class ScheduleController {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Failed to serialize the schedule.");
         }
+    }
+
+    @DeleteMapping(value = "/delete")
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public ResponseEntity<String> deleteWeeklySchedule(@RequestParam(name = "year") String year,
+                                                     @RequestParam(name = "month") String month,
+                                                     @RequestParam(name = "day") String day) {
+
+        Date firstDayOfWeek = stringComponentsToSqlDate(year, month, day);
+
+        repository.deleteByFirstDayOfWeek(firstDayOfWeek);
+
+        return ResponseEntity.ok("Successfully deleted the schedule.");
+    }
+
+    private Date stringComponentsToSqlDate(String year, String month, String day) {
+
+        return new Date(Integer.parseInt(year) - 1900,
+                Integer.parseInt(month) - 1,
+                Integer.parseInt(day));
     }
 }

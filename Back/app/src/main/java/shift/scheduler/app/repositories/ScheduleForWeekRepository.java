@@ -1,5 +1,7 @@
 package shift.scheduler.app.repositories;
 
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.Repository;
 import shift.scheduler.app.models.ScheduleForWeek;
 
@@ -10,4 +12,7 @@ public interface ScheduleForWeekRepository extends Repository<ScheduleForWeek, L
     ScheduleForWeek findByFirstDayOfWeek(Date firstDayOfWeek);
 
     ScheduleForWeek save(ScheduleForWeek scheduleForWeek);
+
+    @Transactional
+    Integer deleteByFirstDayOfWeek(Date firstDayOfWeek);
 }
