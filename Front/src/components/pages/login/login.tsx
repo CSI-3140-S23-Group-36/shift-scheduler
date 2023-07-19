@@ -24,7 +24,8 @@ export default function Login() {
     }
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (event: any) => {
+    event.preventDefault();
     let response;
     try {
       response = await fetch(`${config.apiBaseAddress}auth/signin`, {
@@ -51,7 +52,13 @@ export default function Login() {
   return (
     <div>
       <Page>
-        <div className="login-container">
+        <form
+          className="login-container"
+          onSubmit={(e) => {
+            handleLogin(e);
+            return false;
+          }}
+        >
           <input
             type="text"
             placeholder="Username"
@@ -66,8 +73,10 @@ export default function Login() {
             onChange={handleInputChange}
             name="password"
           />
-          <button onClick={handleLogin}>Login</button>
-        </div>
+          <button type="submit" onClick={handleLogin}>
+            Login
+          </button>
+        </form>
       </Page>
     </div>
   );

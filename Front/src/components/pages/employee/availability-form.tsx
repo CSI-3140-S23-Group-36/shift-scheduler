@@ -3,6 +3,7 @@ import { config } from "../../../config";
 import Page from "../../page";
 import React, { useState } from "react";
 import { RootState } from "../../../store";
+import HourSelect from "../../hour-select";
 
 interface DailyAvailability {
   day: "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
@@ -66,10 +67,8 @@ export default function AvailabilityForm() {
               <h4>{x.name}</h4>
               <div className="m-1">
                 <label htmlFor="from">From</label>
-                <select
-                  id="from"
-                  className="form-control"
-                  onChange={(e) =>
+                <HourSelect
+                  handleChange={(y) =>
                     setDays(
                       days.map((day) =>
                         day.name === x.name
@@ -77,7 +76,7 @@ export default function AvailabilityForm() {
                               name: day.name,
                               backendParams: {
                                 day: day.backendParams.day,
-                                from: Number.parseInt(e.target.value),
+                                from: y,
                                 to: day.backendParams.to,
                               },
                             }
@@ -85,20 +84,12 @@ export default function AvailabilityForm() {
                       )
                     )
                   }
-                >
-                  {[...Array(24)].map((_, i) => (
-                    <option key={i} value={i}>
-                      {i.toString().padStart(2, "0")}:00
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
               <div className="m-1">
                 <label htmlFor="to">To</label>
-                <select
-                  id="to"
-                  className="form-control"
-                  onChange={(e) =>
+                <HourSelect
+                  handleChange={(y) =>
                     setDays(
                       days.map((day) =>
                         day.name === x.name
@@ -107,20 +98,14 @@ export default function AvailabilityForm() {
                               backendParams: {
                                 day: day.backendParams.day,
                                 from: day.backendParams.from,
-                                to: Number.parseInt(e.target.value),
+                                to: y,
                               },
                             }
                           : day
                       )
                     )
                   }
-                >
-                  {[...Array(24)].map((_, i) => (
-                    <option key={i} value={i}>
-                      {i.toString().padStart(2, "0")}:00
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
             </div>
           ))}

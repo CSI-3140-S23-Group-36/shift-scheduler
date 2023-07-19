@@ -8,6 +8,7 @@ import ManagerHome from "./components/pages/manager/manager-home";
 import NewUser from "./components/pages/manager/newUser";
 import EmployeeHome from "./components/pages/employee/employee-home";
 import SelectSchedule from "./components/pages/manager/select-schedule";
+import ViewSchedules from "./components/pages/manager/view-schedules";
 
 const router = createHashRouter([
   { path: "*", element: <Error /> },
@@ -19,6 +20,7 @@ const router = createHashRouter([
   { path: "/availabilities", element: <AvailabilityForm /> },
   { path: "/generate-schedules", element: <GenerateSchedule /> },
   { path: "/select-schedule", element: <SelectSchedule /> },
+  { path: "/view-schedules", element: <ViewSchedules /> },
 ]);
 
 export default function App() {

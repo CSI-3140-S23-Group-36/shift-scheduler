@@ -2,10 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { config } from "../../../config";
 import Page from "../../page";
 
-const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] as const;
-type Day = (typeof days)[number];
-
 import React, { useState } from "react";
+import { days } from "../../../api-interfaces/schedules";
+import HourSelect from "../../hour-select";
 export default function GenerateSchedule() {
   const [week, setWeek] = useState("");
   const [perHour, setPerHour] = useState(0);
@@ -24,6 +23,7 @@ export default function GenerateSchedule() {
         }}
       >
         <h2>Week</h2>
+        <label>Select a Monday.</label>
         <input
           type="date"
           onChange={(e) => setWeek(e.target.value)}
@@ -40,32 +40,17 @@ export default function GenerateSchedule() {
 
         <h2>Time Range</h2>
         <label>Start Time:</label>
-        <select
-          id="from"
-          className="form-control w-25"
-          onChange={(e) => setStart(Number.parseInt(e.target.value))}
-        >
-          {[...Array(24)].map((_, i) => (
-            <option key={i} value={i}>
-              {i.toString().padStart(2, "0")}:00
-            </option>
-          ))}
-        </select>
+        <div className="w-25">
+          <HourSelect handleChange={(x) => setStart(x)} />
+        </div>
 
         <label>End Time:</label>
-        <select
-          id="to"
-          className="form-control w-25"
-          onChange={(e) => setEnd(Number.parseInt(e.target.value))}
-        >
-          {[...Array(24)].map((_, i) => (
-            <option key={i} value={i}>
-              {i.toString().padStart(2, "0")}:00
-            </option>
-          ))}
-        </select>
+        <div className="w-25">
+          <HourSelect handleChange={(x) => setEnd(x)} />
+        </div>
 
         <button
+          className="btn btn-primary m-3"
           onClick={async () => {
             const send = days.map((x) => {
               return {
@@ -88,7 +73,7 @@ export default function GenerateSchedule() {
               const schedules = await response.json();
               if (!schedules.error) {
                 navigate("/select-schedule", {
-                  state: { schedules: schedules },
+                  state: { schedules: schedules, week: week },
                 });
               } else {
                 console.log("Error generating!");
