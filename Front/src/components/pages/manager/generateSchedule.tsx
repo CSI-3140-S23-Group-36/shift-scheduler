@@ -13,6 +13,9 @@ export default function GenerateSchedule() {
 
   const navigate = useNavigate();
 
+  const [backendError, setBackendError] = useState(
+    undefined as undefined | string
+  );
   return (
     <Page>
       <div
@@ -52,6 +55,7 @@ export default function GenerateSchedule() {
         <button
           className="btn btn-primary m-3"
           onClick={async () => {
+            setBackendError(undefined);
             const send = days.map((x) => {
               return {
                 day: x,
@@ -76,10 +80,14 @@ export default function GenerateSchedule() {
                   state: { schedules: schedules, week: week },
                 });
               } else {
-                console.log("Error generating!");
+                setBackendError(
+                  "Error when generating schedules! An error occurred."
+                );
               }
             } catch (ex) {
-              console.log("Could not communicate with db");
+              setBackendError(
+                "Error when generating schedules! Could not connect to backend."
+              );
               return;
             }
           }}
@@ -87,6 +95,13 @@ export default function GenerateSchedule() {
           Generate Schedules
         </button>
       </div>
+      {backendError && (
+        <div className="d-flex flex-column align-items-center">
+          <div className="alert alert-danger w-25" role="alert">
+            {backendError}
+          </div>
+        </div>
+      )}
     </Page>
   );
 }

@@ -22,8 +22,13 @@ export default function ViewSchedules() {
   const [week, setWeek] = useState("");
   const [schedule, setSchedule] = useState(undefined as Schedule | undefined);
 
+  const [backendError, setBackendError] = useState(
+    undefined as undefined | string
+  );
+
   useEffect(() => {
     setSchedule(undefined);
+    setBackendError(undefined);
     if (week.split("-").length == 3) {
       const getSchedule = async () => {
         let response;
@@ -44,14 +49,18 @@ export default function ViewSchedules() {
             }
           );
         } catch (ex) {
-          console.log("Could not communicate with db");
+          setBackendError(
+            "Error when retrieving schedule! Could not connect to backend."
+          );
           return;
         }
         const s = (await response.json()) as Schedule;
         if (s === null || !s.firstDayOfWeek) {
+          setBackendError(
+            "Error when retrieving schedule! A schedule may not exist for this date."
+          );
           return;
         }
-        console.log(s);
         setSchedule(s);
       };
       getSchedule();
@@ -72,6 +81,13 @@ export default function ViewSchedules() {
         </div>
         {schedule && <ScheduleCard schedule={schedule}></ScheduleCard>}
       </div>
+      {backendError && (
+        <div className="d-flex flex-column align-items-center">
+          <div className="alert alert-danger w-25" role="alert">
+            {backendError}
+          </div>
+        </div>
+      )}
     </Page>
   );
 }

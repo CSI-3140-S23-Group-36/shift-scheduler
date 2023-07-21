@@ -11,6 +11,9 @@ import { authSlice } from "../../../authSlice";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [backendError, setBackendError] = useState(
+    undefined as undefined | string
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   const navigate = useNavigate();
@@ -26,6 +29,7 @@ export default function Login() {
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
+    setBackendError(undefined);
     let response;
     try {
       response = await fetch(`${config.apiBaseAddress}auth/signin`, {
@@ -37,15 +41,19 @@ export default function Login() {
         },
       });
     } catch (ex) {
-      console.log("Could not communicate with db");
+      setBackendError("Error when logging in! Could not connect to backend.");
       return;
     }
-    const userInfoResponse = (await response.json()) as UserInfoResponse;
-    dispatch(authSlice.actions.setLogin(userInfoResponse));
-    if (userInfoResponse.roles.includes("MANAGER")) {
-      navigate("/manager-home");
-    } else if (userInfoResponse.roles.includes("EMPLOYEE")) {
-      navigate("/employee-home");
+    const userInfoResponse = await response.json();
+    if (userInfoResponse.error) {
+      setBackendError("Error when logging in! Incorrect username / password.");
+    } else {
+      dispatch(authSlice.actions.setLogin(userInfoResponse));
+      if (userInfoResponse.roles.includes("MANAGER")) {
+        navigate("/manager-home");
+      } else if (userInfoResponse.roles.includes("EMPLOYEE")) {
+        navigate("/employee-home");
+      }
     }
   };
 
@@ -77,6 +85,13 @@ export default function Login() {
             Login
           </button>
         </form>
+        {backendError && (
+          <div className="d-flex flex-column align-items-center">
+            <div className="alert alert-danger w-25" role="alert">
+              {backendError}
+            </div>
+          </div>
+        )}
       </Page>
     </div>
   );

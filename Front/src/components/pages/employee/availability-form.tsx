@@ -18,9 +18,13 @@ interface Day {
 }
 
 export default function AvailabilityForm() {
+  const [backendError, setBackendError] = useState(
+    undefined as undefined | string
+  );
   const username = useSelector(
     (state: RootState) => state.auth.userInfo?.username
   );
+  const name = useSelector((state: RootState) => state.auth.userInfo?.name);
   const [days, setDays] = useState([
     { name: "Monday", backendParams: { day: "MON", from: 0, to: 0 } },
     { name: "Tuesday", backendParams: { day: "TUE", from: 0, to: 0 } },
@@ -35,6 +39,7 @@ export default function AvailabilityForm() {
       <form
         className="container"
         onSubmit={async () => {
+          setBackendError(undefined);
           for (const day of days) {
             let response;
             try {
@@ -53,14 +58,24 @@ export default function AvailabilityForm() {
                 }
               );
             } catch (ex) {
-              console.log("Could not communicate with db");
+              setBackendError(
+                "Error when adding availabilities! Could not connect to backend."
+              );
               return;
+            }
+            const jsonResponse = await response.json();
+            if (jsonResponse.error) {
+              setBackendError(
+                "Error when adding availabilities! An error occurred."
+              );
             }
           }
         }}
       >
         <h1>Availability Form</h1>
-        <div>Modifying availabilities for {username}</div>
+        <div>
+          Modifying availabilities for {name} ({username})
+        </div>
         <div className="m-3 row align-items-center">
           {days.map((x) => (
             <div key={x.name} className="col">
@@ -116,6 +131,13 @@ export default function AvailabilityForm() {
           </button>
         </div>
       </form>
+      {backendError && (
+        <div className="d-flex flex-column align-items-center">
+          <div className="alert alert-danger w-25" role="alert">
+            {backendError}
+          </div>
+        </div>
+      )}
     </Page>
   );
 }
