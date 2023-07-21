@@ -8,11 +8,13 @@ export default function NewUser() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("EMPLOYEE");
 
   const [backendError, setBackendError] = useState(
     undefined as undefined | string
   );
+
+  const navigate = useNavigate();
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -57,6 +59,13 @@ export default function NewUser() {
         "Error when creating new user! Could not connect to backend."
       );
       return;
+    }
+    const userInfoResponse = await response.json();
+    console.log(userInfoResponse);
+    if (userInfoResponse.message !== "User registered successfully!") {
+      setBackendError(userInfoResponse.message);
+    } else {
+      navigate("/");
     }
   };
   return (
@@ -109,7 +118,7 @@ export default function NewUser() {
                 onChange={handleInputChange}
               >
                 <option value="EMPLOYEE">Employee</option>
-                <option value="Manager">Manager</option>
+                <option value="MANAGER">Manager</option>
               </select>
               <div className="d-flex justify-content-end mt-3">
                 <button className="btn btn-primary" type="submit">
