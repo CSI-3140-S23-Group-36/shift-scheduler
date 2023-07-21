@@ -13,6 +13,9 @@ export default function EmployeeHome() {
         <NavLink className="btn btn-outline-primary m-1" to="/availabilities">
           View Availability Form
         </NavLink>
+        <NavLink className="btn btn-outline-primary m-1" to="/view-schedules">
+          Shift Schedule Viewing
+        </NavLink>
       </div>
     </Page>
   );
