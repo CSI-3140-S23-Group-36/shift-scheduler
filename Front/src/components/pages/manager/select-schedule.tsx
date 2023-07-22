@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Page from "../../page";
 import { config } from "../../../config";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ScheduleTable from "../../schedule-table";
 import { Schedule } from "../../../api-interfaces/schedules";
 
@@ -13,6 +13,8 @@ export default function SelectSchedule() {
   const [backendError, setBackendError] = useState(
     undefined as undefined | string
   );
+
+  const navigate = useNavigate();
 
   function ScheduleOption(props: {
     schedule: Schedule;
@@ -51,6 +53,7 @@ export default function SelectSchedule() {
                   );
                   return;
                 }
+                navigate("/manager-home");
               }}
             >
               Select
